@@ -15,6 +15,7 @@ know anything about your data. (see example2.c)
 The Makefile builds both example executables and libmemdbc.a
 
 The lbrary calls are:
+
 	MemDbc_t *memDbcInit(DbTypes_t dbType);
 		Call this function first with one of the database type to use.
 
