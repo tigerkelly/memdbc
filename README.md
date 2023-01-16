@@ -33,13 +33,14 @@ The lbrary calls are:
 
 	void memDbcSave(MemDbc_t *memDbc, char *fileName, char *(callback)(char *key, void *data));
 		Saves the database to an ascii text file if the fileName is not NULL.
-		The callback mainly formats the data into an string so the memDbcSave function write it to the file.
-		If the fileName is NULL then file is not creaeted and no data is saved by the memDbcSave function,
-		this allows the callback to process the record as they want.
+		The callback mainly formats the data into an string so the memDbcSave function write it
+		to the file.
+		If the fileName is NULL then file is not creaeted and no data is saved by the memDbcSave
+		function, this allows the callback to process the record as they want.
 
 	void memDbcFindAll(MemDbc_t *memDbc, char *regexStr, void (callback)(char *key, void *data));
-		This uses a regex to find all reocrds that match pattern and calls the users callback function
-		for each record found.
+		This uses a regex to find all reocrds that match pattern and calls the users callback
+		function for each record found.
 
 	int memDbcDelete(MemDbc_t *memDbc, char *key);
 		Deletes a record from the database based on key given.
