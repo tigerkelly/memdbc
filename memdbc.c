@@ -46,6 +46,10 @@ void keyListInsert(MemDbc_t *memDbc, char *key) {
     }
 }
 
+/* keyListDelete() - delete key from sorted linked list.
+ * memDbc - returned by memDbcInit()
+ * key - to remove.
+ */
 void keyListDelete(MemDbc_t *memDbc, char *key) {
 
 	Key_t *next = memDbc->head;
@@ -425,29 +429,6 @@ void memDbcWalk(MemDbc_t *memDbc, char *(*callback)(char *key, void *data)) {
 	keyListWalk(memDbc, callback);
 }
 
-#if(0)
-void memDbcWalk(MemDbc_t *memDbc, char *(*callback)(char *key, void *data)) {
-
-	switch (memDbc->dbType) {
-		case ASCII_DB:
-			keyListWalk(memDbc, callback);
-			break;
-		case DIGITAL_DB:
-			keyListWalk(memDbc, callback);
-			break;
-		case HEX_DB:
-			keyListWalk(memDbc, callback);
-			break;
-		case OCTAL_DB:
-			keyListWalk(memDbc, callback);
-			break;
-		default:
-			memDbcErrorNum = UNKNOWN_TYPE;
-			return;
-	}
-}
-#endif
-
 /* memDbcSave() - Saves all records to a file.
  * memDbc - returned by memDbcInit()
  * fileName - File name to save data to or NULL is user's callback is saving the data.
@@ -455,20 +436,7 @@ void memDbcWalk(MemDbc_t *memDbc, char *(*callback)(char *key, void *data)) {
  */
 void memDbcSave(MemDbc_t *memDbc, char *fileName, char *(*callback)(char *key, void *data)) {
 
-	switch (memDbc->dbType) {
-		case ASCII_DB:
-			keyListSave(memDbc, fileName, callback);
-			break;
-		case DIGITAL_DB:
-			break;
-		case HEX_DB:
-			break;
-		case OCTAL_DB:
-			break;
-		default:
-			memDbcErrorNum = UNKNOWN_TYPE;
-			return;
-	}
+	keyListSave(memDbc, fileName, callback);
 }
 
 /* memDbcErro() - returns the MemDbCErrorNum value.
