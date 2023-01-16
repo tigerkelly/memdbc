@@ -1,11 +1,11 @@
 # memdbc
 In memory database in C
 
-This library uses both a Trie tree and a sorted link list to store data.  The data is stored in the Trie tree and the keys are stored in a sroted linked list.
+This library uses both a Trie tree and a sorted link list to store data.  The data is stored in the Trie tree and the keys are stored in a sorted linked list.
 
 The database size is limited on the amount of free memory in system.
 
-Thier are two example programs, example.c is a simple string data and example2.c is a C structure data.
+Thier are two example programs, example1.c is a simple string data and example2.c is a C structure data.
 
 The data you can store in the database can be anything, structures, strings or integers.
 
@@ -18,6 +18,10 @@ The lbrary calls are:
 
 	MemDbc_t *memDbcInit(DbTypes_t dbType);
 		Call this function first with one of the database type to use.
+		ASCI_DB - the key is a string of printable characters 95 in all but avoid using commas.  
+		DIGITAL_DB - the key is all digits characters 0-9
+		HEX_DB - the key is hexadecimal characters 0-9 and a-z or A-Z
+		OCTAL_DB - the key is octal characters 0-8
 
 	int memDbcAdd(MemDbc_t *memDbc, char *key, void *data, int len);
 		This adds a record to the database.
