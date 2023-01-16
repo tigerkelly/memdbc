@@ -19,7 +19,7 @@ typedef struct _data_ {
 } Data_t;
 
 Data_t data[] = {
-	{"Kelly Wiles", 64, "4205 Pinwood Drive", 0, "Plano", "TX", "12345"},
+	{"Kelly Wiles", 64, "4305 Pinwood Drive", 0, "Plano", "TX", "12345"},
 	{"John Doe", 6, "9999 Lie Drive", 10002, "Anywere", "TX", "21345"},
 	{"Jane Doe", 6, "9999 Lie Drive", 10002, "Anywere", "TX", "21345"},
 	{"Larry Doe", 16, "1111 Pickle Drive", 600, "Somewere", "TX", "12345-106"}
