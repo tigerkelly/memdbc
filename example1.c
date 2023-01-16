@@ -21,11 +21,11 @@ int main(int argc, char *argv[]) {
 
 	printf("**** Testing Ascii database. ****\n");
 	testAscii();
-	printf("**** Testing Digital database. ****\n");
+	printf("\n**** Testing Digital database. ****\n");
 	testDigital();
-	printf("**** Testing Hex database. ****\n");
+	printf("\n**** Testing Hex database. ****\n");
 	testHex();
-	printf("**** Testing Octal database. ****\n");
+	printf("\n**** Testing Octal database. ****\n");
 	testOctal();
 
 	return 0;
