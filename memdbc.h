@@ -91,6 +91,13 @@ typedef enum _memDbcErrors {
 	UNKNOWN_TYPE
 } MemDbcError_t;
 
+typedef enum _memDbcAction {
+	ACTION_ERR,
+	ACTION_INSERT,
+	ACTION_UPDATED,
+	ACTION_DELETED
+} MemDbcAction_t;
+
 typedef struct _ttkey_ {
     char *key;
     struct _ttkey_ *ptr;
@@ -110,8 +117,8 @@ int memDbcAdd(MemDbc_t *memDbc, char *key, void *data, int len);
 unsigned long memDbcNumEntries(MemDbc_t *memDbc);
 void memDbcWalk(MemDbc_t *memDbc, char *(callback)(char *key, void *data));
 void *memDbcFind(MemDbc_t *memDbc, char *key);
-void memDbcSave(MemDbc_t *memDbc, char *fileName, char *(callback)(char *key, void *data));
 void memDbcFindAll(MemDbc_t *memDbc, char *regexStr, void (callback)(char *key, void *data));
+void memDbcSave(MemDbc_t *memDbc, char *fileName, char *(callback)(char *key, void *data));
 int memDbcDelete(MemDbc_t *memDbc, char *key);
 MemDbcError_t memDbcError();
 

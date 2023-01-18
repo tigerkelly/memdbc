@@ -82,16 +82,19 @@ void keyListDelete(MemDbc_t *memDbc, char *key) {
 	while(next != NULL) {
 		if (strcmp(key, next->key) == 0) {
 			if (prev == NULL) {
+				// Deleting first item in list.
 				memDbc->head = next->ptr;
 				free(next->key);
 				free(next);
 			} else {
 				prev->ptr = next->ptr;
-				free(prev->key);
-				free(prev);
+				free(next->key);
+				free(next);
 			}
+			printf("Deleted key %s\n", key);
 			break;
 		}
+		prev = next;
 		next = next->ptr;
 	}
 }
@@ -126,11 +129,11 @@ void keyListWalk(MemDbc_t *memDbc, char *(*callback)(char *key, void *data)) {
 		}
 
 		if (callback == NULL)
-			printf("Key=%s, Value=%s\n", next->key, (char *)data);
+			printf("  Key=%s, Value=%s\n", next->key, (char *)data);
 		else {
 			char *s = callback(next->key, data);
 			if ( s != NULL) {
-				printf("%s\n", s);
+				printf("  %s\n", s);
 				free(s);
 			}
 		}
@@ -299,6 +302,7 @@ int memDbcAdd(MemDbc_t *memDbc, char *key, void *data, int len) {
 			break;
 		case DIGITAL_DB:
 			r = dttInsert(memDbc->tree, key, data, len);
+			printf(" --- %d ---\n", r);
 			if (r == 1) {
 				// key already exists in trie tree then do NOT add to sorted link list.
 				keyListInsert(memDbc, key);

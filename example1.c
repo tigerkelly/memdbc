@@ -43,14 +43,40 @@ void testOctal();
 
 int main(int argc, char *argv[]) {
 
-	printf("**** Testing Ascii database. ****\n");
-	testAscii();
-	printf("\n**** Testing Digital database. ****\n");
-	testDigital();
-	printf("\n**** Testing Hex database. ****\n");
-	testHex();
-	printf("\n**** Testing Octal database. ****\n");
-	testOctal();
+	if (argc == 1) {
+		printf("Usage: example1 [-all] [-ascii] [-digital] [-hex] [-octal]\n");
+		printf("    -all, run all tests.\n");
+		printf("    -ascii, run ascii test.\n");
+		printf("    -digital, run digital test.\n");
+		printf("    -hex, run hex test.\n");
+		printf("    -octal, run octal test.\n");
+		return 1;
+	}
+
+	for (int i = 1; i < argc; i++) {
+		if (strcmp(argv[i], "-ascii") == 0) {
+			printf("**** Testing Ascii database. ****\n");
+			testAscii();
+		} else if (strcmp(argv[i], "-digital") == 0) {
+			printf("\n**** Testing Digital database. ****\n");
+			testDigital();
+		} else if (strcmp(argv[i], "-hex") == 0) {
+			printf("\n**** Testing Hex database. ****\n");
+			testHex();
+		} else if (strcmp(argv[i], "-octal") == 0) {
+			printf("\n**** Testing Octal database. ****\n");
+			testOctal();
+		} else if (strcmp(argv[i], "-all") == 0) {
+			printf("**** Testing Ascii database. ****\n");
+			testAscii();
+			printf("\n**** Testing Digital database. ****\n");
+			testDigital();
+			printf("\n**** Testing Hex database. ****\n");
+			testHex();
+			printf("\n**** Testing Octal database. ****\n");
+			testOctal();
+		}
+	} 
 
 	return 0;
 }
@@ -99,6 +125,15 @@ void testAscii() {
 	// Print all records in the DB.
 	memDbcWalk(memDbc, walkCallback);
 
+	// Delete a record.
+	memDbcDelete(memDbc, "wiles");
+
+	memDbcWalk(memDbc, walkCallback);
+
+	// update record.
+	printf("Update record 'kellywiles'\n");
+	memDbcAdd(memDbc, "kellywiles", "hello world.", 12);
+
 	// Save all records to an ascii text file.
 	// If fileName is NULL then caller handles saving data.
 	memDbcSave(memDbc, "ascii1.txt", saveCallback);
@@ -110,7 +145,7 @@ void testDigital() {
 	char *v3 = "123 was here.";
 	char *v4 = "01234 was here.";
 
-	MemDbc_t *memDbc = memDbcInit(ASCII_DB);
+	MemDbc_t *memDbc = memDbcInit(DIGITAL_DB);
 
 
 	// Add a few records and they are plain strings.
@@ -153,6 +188,10 @@ void testDigital() {
 
 	memDbcWalk(memDbc, walkCallback);
 
+	// update record.
+	printf("Update record '678'\n");
+	memDbcAdd(memDbc, "678", "updated, hello world.", 21);
+
 	// Save all records to an ascii text file.
 	// If fileName is NULL then caller handles saving data.
 	memDbcSave(memDbc, "digital1.txt", saveCallback);
@@ -164,7 +203,7 @@ void testHex() {
 	char *v3 = "123B was here.";
 	char *v4 = "12C34 was here.";
 
-	MemDbc_t *memDbc = memDbcInit(ASCII_DB);
+	MemDbc_t *memDbc = memDbcInit(HEX_DB);
 
 
 	// Add a few records and they are plain strings.
@@ -202,6 +241,15 @@ void testHex() {
 	// Print all records in the DB.
 	memDbcWalk(memDbc, walkCallback);
 
+	// Delete a record.
+	memDbcDelete(memDbc, "E678");
+
+	memDbcWalk(memDbc, walkCallback);
+
+	// update record.
+	printf("Update record '123B'\n");
+	memDbcAdd(memDbc, "123B", "was updated.", 12);
+
 	// Save all records to an ascii text file.
 	// If fileName is NULL then caller handles saving data.
 	memDbcSave(memDbc, "hex1.txt", saveCallback);
@@ -209,16 +257,16 @@ void testHex() {
 
 void testOctal() {
 	char *v1 = "012345 was here.";
-	char *v2 = "0678 was here.";
+	char *v2 = "067 was here.";
 	char *v3 = "0123 was here.";
 	char *v4 = "01234 was here.";
 
-	MemDbc_t *memDbc = memDbcInit(ASCII_DB);
+	MemDbc_t *memDbc = memDbcInit(OCTAL_DB);
 
 
 	// Add a few records and they are plain strings.
 	memDbcAdd(memDbc, "012345", v1, strlen(v1));
-	memDbcAdd(memDbc, "0678", v2, strlen(v2));
+	memDbcAdd(memDbc, "067", v2, strlen(v2));
 	memDbcAdd(memDbc, "0123", v3, strlen(v3));
 	memDbcAdd(memDbc, "01234", v4, strlen(v4));
 
@@ -251,9 +299,18 @@ void testOctal() {
 	// Print all records in the DB.
 	memDbcWalk(memDbc, walkCallback);
 
+	// Delete a record.
+	memDbcDelete(memDbc, "067");
+
+	memDbcWalk(memDbc, walkCallback);
+
+	// update record.
+	printf("Update record '0123'\n");
+	memDbcAdd(memDbc, "0678", "was updated.", 12);
+
 	// Save all records to an ascii text file.
 	// If fileName is NULL then caller handles saving data.
-	memDbcSave(memDbc, "digital1.txt", saveCallback);
+	memDbcSave(memDbc, "octal1.txt", saveCallback);
 }
 
 // Returns a comma separated string of the record.

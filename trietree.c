@@ -100,9 +100,9 @@ AsciiTrieTreeNode *attFindEnd(AsciiTrieTree *trie, char *key) {
 }
 
 /*
- * Function _attInsertRollback is private to this file.
+ * Function _attRollback is private to this file.
  */
-static void _attInsertRollback(AsciiTrieTree *trie, char *key) {
+static void _attRollback(AsciiTrieTree *trie, char *key) {
 	AsciiTrieTreeNode *node;
 	AsciiTrieTreeNode **prev_ptr;
 	AsciiTrieTreeNode *next_node;
@@ -155,16 +155,17 @@ int attInsert(AsciiTrieTree *trie, char *key, void *value, int valueLen) {
 	AsciiTrieTreeNode **rover;
 	AsciiTrieTreeNode *node;
 	char *p;
+	int ret = 0;
 
 	if (_asciiTrieTreeInit == 0) {
 		Err("Must call attInit() first.\n");
-		return 0;
+		return ret;
 	}
 
 	/* Cannot insert NULL values */
 
 	if (value == TRIE_NULL) {
-		return 0;
+		return ret;
 	}
 
 	// Search down the trie until we reach the end of string,
@@ -190,9 +191,9 @@ int attInsert(AsciiTrieTree *trie, char *key, void *value, int valueLen) {
         if (tmp == NULL) {
             // Allocation failed.  Go back and undo
             // what we have done so far.
-            _attInsertRollback(trie, key);
+            _attRollback(trie, key);
 
-            return 0;
+            return ret;
         }
 
 		AsciiTrieTreeNode *expect = NULL;
@@ -211,8 +212,13 @@ int attInsert(AsciiTrieTree *trie, char *key, void *value, int valueLen) {
 
 		// Reached the end of string?  If so, we're finished.
 		if (*p == '\0') {
-			if (node->data != NULL)
+			if (node->data != NULL) {
+				// printf(" **** Freeing node data.\n");
 				free(node->data);
+				ret = 2;
+			} else {
+				ret = 1;
+			}
 			node->data = (void *)calloc(1, valueLen + 1);
 			memcpy((char *)node->data, (char *)value, valueLen);
 			break;
@@ -226,7 +232,7 @@ int attInsert(AsciiTrieTree *trie, char *key, void *value, int valueLen) {
 	if (tmp != NULL)
 		free(tmp);
 
-	return 1;
+	return ret;
 }
 
 int attDelete(AsciiTrieTree *trie, char *key) {
@@ -338,9 +344,9 @@ DigitalTrieTreeNode *dttFindEnd(DigitalTrieTree *trie, char *key) {
 }
 
 /*
- * Function _dttInsertRollback is private to this file.
+ * Function _dttRollback is private to this file.
  */
-static void _dttInsertRollback(DigitalTrieTree *trie, char *key) {
+static void _dttRollback(DigitalTrieTree *trie, char *key) {
 	DigitalTrieTreeNode *node;
 	DigitalTrieTreeNode **prev_ptr;
 	DigitalTrieTreeNode *next_node;
@@ -393,16 +399,17 @@ int dttInsert(DigitalTrieTree *trie, char *key, void *value, int valueLen) {
 	DigitalTrieTreeNode **rover;
 	DigitalTrieTreeNode *node;
 	char *p;
+	int ret = 0;
 
 	if (_digitalTrieTreeInit == 0) {
 		Err("Must call ttInit() first.\n");
-		return 0;
+		return ret;
 	}
 
 	/* Cannot insert NULL values */
 
 	if (value == TRIE_NULL) {
-		return 0;
+		return ret;
 	}
 
 	// Search down the trie until we reach the end of string,
@@ -428,9 +435,9 @@ int dttInsert(DigitalTrieTree *trie, char *key, void *value, int valueLen) {
         if (tmp == NULL) {
             // Allocation failed.  Go back and undo
             // what we have done so far.
-            _dttInsertRollback(trie, key);
+            _dttRollback(trie, key);
 
-            return 0;
+            return ret;
         }
 
         DigitalTrieTreeNode *expect = NULL;
@@ -449,8 +456,13 @@ int dttInsert(DigitalTrieTree *trie, char *key, void *value, int valueLen) {
 
 		// Reached the end of string?  If so, we're finished.
 		if (*p == '\0') {
-			if (node == NULL)
-				printf("NULL\n");
+			if (node->data != NULL) {
+				printf(" **** Freeing node data.\n");
+				free(node->data);
+				ret = 2;
+			} else {
+				ret = 1;
+			}
 			node->data = (void *)calloc(1, valueLen + 1);
 			memcpy((char *)node->data, (char *)value, valueLen);
 			break;
@@ -464,7 +476,7 @@ int dttInsert(DigitalTrieTree *trie, char *key, void *value, int valueLen) {
 	if (tmp != NULL)
 		free(tmp);
 
-	return 1;
+	return ret;
 }
 
 int dttDelete(DigitalTrieTree *trie, char *key) {
@@ -591,9 +603,9 @@ HexTrieTreeNode *httFindEnd(HexTrieTree *trie, char *key) {
 }
 
 /*
- * Function _httInsertRollback is private to this file.
+ * Function _httRollback is private to this file.
  */
-static void _httInsertRollback(HexTrieTree *trie, char *key) {
+static void _httRollback(HexTrieTree *trie, char *key) {
 	HexTrieTreeNode *node;
 	HexTrieTreeNode **prev_ptr;
 	HexTrieTreeNode *next_node;
@@ -646,16 +658,17 @@ int httInsert(HexTrieTree *trie, char *key, void *value, int valueLen) {
 	HexTrieTreeNode **rover;
 	HexTrieTreeNode *node;
 	char *p;
+	int ret = 0;
 
 	if (_hexTrieTreeInit == 0) {
 		Err("Must call httInit() first.\n");
-		return 0;
+		return ret;
 	}
 
 	/* Cannot insert NULL values */
 
 	if (value == TRIE_NULL) {
-		return 0;
+		return ret;
 	}
 
 	// Search down the trie until we reach the end of string,
@@ -681,9 +694,9 @@ int httInsert(HexTrieTree *trie, char *key, void *value, int valueLen) {
         if (tmp == NULL) {
             // Allocation failed.  Go back and undo
             // what we have done so far.
-            _httInsertRollback(trie, key);
+            _httRollback(trie, key);
 
-            return 0;
+            return ret;
         }
 
         HexTrieTreeNode *expect = NULL;
@@ -702,10 +715,12 @@ int httInsert(HexTrieTree *trie, char *key, void *value, int valueLen) {
 
 		// Reached the end of string?  If so, we're finished.
 		if (*p == '\0') {
-			if (node == NULL)
-				node = calloc(1, sizeof(HexTrieTreeNode));
-			if (node->data != NULL)
+			if (node->data != NULL) {
 				free(node->data);
+				ret = 2;
+			} else {
+				ret = 1;
+			}
 			node->data = (void *)calloc(1, valueLen + 1);
 			memcpy((char *)node->data, (char *)value, valueLen);
 			break;
@@ -719,7 +734,7 @@ int httInsert(HexTrieTree *trie, char *key, void *value, int valueLen) {
 	if (tmp != NULL)
 		free(tmp);
 
-	return 1;
+	return ret;
 }
 
 int httDelete(HexTrieTree *trie, char *key) {
@@ -826,9 +841,9 @@ OctalTrieTreeNode *ottFindEnd(OctalTrieTree *trie, char *key) {
 }
 
 /*
- * Function _ottInsertRollback is private to this file.
+ * Function _ottRollback is private to this file.
  */
-static void _ottInsertRollback(OctalTrieTree *trie, char *key) {
+static void _ottRollback(OctalTrieTree *trie, char *key) {
 	OctalTrieTreeNode *node;
 	OctalTrieTreeNode **prev_ptr;
 	OctalTrieTreeNode *next_node;
@@ -881,16 +896,17 @@ int ottInsert(OctalTrieTree *trie, char *key, void *value, int valueLen) {
 	OctalTrieTreeNode **rover;
 	OctalTrieTreeNode *node;
 	char *p = key;
+	int ret = 0;
 
 	if (_octalTrieTreeInit == 0) {
 		Err("Must call ottInit() first.\n");
-		return 0;
+		return ret;
 	}
 
 	/* Cannot insert NULL values */
 
 	if (value == TRIE_NULL) {
-		return 0;
+		return ret;
 	}
 
 	// Search down the trie until we reach the end of unsigned int,
@@ -914,9 +930,9 @@ int ottInsert(OctalTrieTree *trie, char *key, void *value, int valueLen) {
         if (tmp == NULL) {
             // Allocation failed.  Go back and undo
             // what we have done so far.
-            _ottInsertRollback(trie, key);
+            _ottRollback(trie, key);
 
-            return 0;
+            return ret;
         }
 
         OctalTrieTreeNode *expect = NULL;
@@ -935,10 +951,12 @@ int ottInsert(OctalTrieTree *trie, char *key, void *value, int valueLen) {
 
 		// Reached the end of string?  If so, we're finished.
 		if (*p == '\0') {
-			if (node == NULL)
-				node = calloc(1, sizeof(OctalTrieTreeNode));
-			if (node->data != NULL)
+			if (node->data != NULL) {
 				free(node->data);
+				ret = 2;
+			} else {
+				ret = 1;
+			}
 			node->data = (void *)calloc(1, valueLen + 1);
 			memcpy((char *)node->data, (char *)value, valueLen);
 			break;
@@ -952,7 +970,7 @@ int ottInsert(OctalTrieTree *trie, char *key, void *value, int valueLen) {
 	if (tmp != NULL)
 		free(tmp);
 
-	return 1;
+	return ret;
 }
 
 int ottDelete(OctalTrieTree *trie, char *key) {
