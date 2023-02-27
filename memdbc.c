@@ -46,23 +46,24 @@ void keyListInsert(MemDbc_t *memDbc, char *key) {
     temp->key = strdup(key);
     temp->ptr = NULL;
 
-    if (memDbc->head == NULL) {
+    if (memDbc->head == NULL) {		// If linked list is emptt.
 		// printf("Head: %s\n", key);
         memDbc->head = temp;
     } else {
         prev = NULL;
         next = memDbc->head;
+		// look for matching key or key in list larger than key.
         while(next != NULL && strcmp(next->key, key) < 0){
             prev = next;
             next = next->ptr;
         }
-        if (next == NULL) {
+        if (next == NULL) {			// add key to end of list.
             prev->ptr = temp;
-        } else{
-            if (prev != NULL) {
+        } else {
+            if (prev != NULL) {		// add key to middle of list.
                 temp->ptr = prev->ptr;
                 prev-> ptr = temp;
-            } else {
+            } else {				// add key to start of linked list.
                 temp->ptr = memDbc->head;
                 memDbc->head = temp;
             }
@@ -143,7 +144,7 @@ void keyListWalk(MemDbc_t *memDbc, char *(*callback)(char *key, void *data)) {
 
 /* keyListSave() - Walks the sorted linked list and calls the callback function.
  * memDbc - returned by memDbcInit()
- * fileName - file name to save darta to or NULL if user is saving the records.
+ * fileName - file name to save data to or NULL if user is saving the records.
  * callback - the user supplied callback fucntion.
  */
 void keyListSave(MemDbc_t *memDbc, char *fileName, char *(*callback)(char *key, void *data)) {
@@ -182,7 +183,7 @@ void keyListSave(MemDbc_t *memDbc, char *fileName, char *(*callback)(char *key, 
 				char *s = callback(next->key, data);
 				if (s != NULL) {
 					fprintf(out, "%s\n", s);
-					free(s);
+					free(s);		// free memory allocated by callback.
 				}
 			} else {
 				// Caller is saving the data.
@@ -302,7 +303,6 @@ int memDbcAdd(MemDbc_t *memDbc, char *key, void *data, int len) {
 			break;
 		case DIGITAL_DB:
 			r = dttInsert(memDbc->tree, key, data, len);
-			printf(" --- %d ---\n", r);
 			if (r == 1) {
 				// key already exists in trie tree then do NOT add to sorted link list.
 				keyListInsert(memDbc, key);

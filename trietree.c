@@ -215,12 +215,14 @@ int attInsert(AsciiTrieTree *trie, char *key, void *value, int valueLen) {
 			if (node->data != NULL) {
 				// printf(" **** Freeing node data.\n");
 				free(node->data);
+				node->data = NULL;
 				ret = 2;
 			} else {
 				ret = 1;
 			}
 			node->data = (void *)calloc(1, valueLen + 1);
 			memcpy((char *)node->data, (char *)value, valueLen);
+			AtomicAdd(&node->inUse, 1);
 			break;
 		}
 
@@ -246,8 +248,10 @@ int attDelete(AsciiTrieTree *trie, char *key) {
 	node = attFindEnd(trie, key);
 
 	if (node != NULL) {
-		if (node->data != NULL)
+		if (node->data != NULL) {
 			free(node->data);
+			node->data = NULL;
+		}
 		if (node->useCount > 0)
 			node->useCount--;
 		if (node->useCount == 0)
@@ -459,12 +463,14 @@ int dttInsert(DigitalTrieTree *trie, char *key, void *value, int valueLen) {
 			if (node->data != NULL) {
 				printf(" **** Freeing node data.\n");
 				free(node->data);
+				node->data = NULL;
 				ret = 2;
 			} else {
 				ret = 1;
 			}
 			node->data = (void *)calloc(1, valueLen + 1);
 			memcpy((char *)node->data, (char *)value, valueLen);
+			AtomicAdd(&node->inUse, 1);
 			break;
 		}
 
@@ -490,8 +496,10 @@ int dttDelete(DigitalTrieTree *trie, char *key) {
 	node = dttFindEnd(trie, key);
 
 	if (node != NULL) {
-		if (node->data != NULL)
+		if (node->data != NULL) {
 			free(node->data);
+			node->data = NULL;
+		}
 		if (node->useCount > 0)
 			node->useCount--;
 		if (node->useCount == 0)
@@ -717,12 +725,14 @@ int httInsert(HexTrieTree *trie, char *key, void *value, int valueLen) {
 		if (*p == '\0') {
 			if (node->data != NULL) {
 				free(node->data);
+				node->data = NULL;
 				ret = 2;
 			} else {
 				ret = 1;
 			}
 			node->data = (void *)calloc(1, valueLen + 1);
 			memcpy((char *)node->data, (char *)value, valueLen);
+			AtomicAdd(&node->inUse, 1);
 			break;
 		}
 
@@ -748,8 +758,10 @@ int httDelete(HexTrieTree *trie, char *key) {
 	node = httFindEnd(trie, key);
 
 	if (node != NULL) {
-		if (node->data != NULL)
+		if (node->data != NULL) {
 			free(node->data);
+			node->data = NULL;
+		}
 		if (node->useCount > 0)
 			node->useCount--;
 		if (node->useCount == 0)
@@ -796,6 +808,8 @@ int httNumEntries(HexTrieTree *trie) {
 
 int _octalTrieTreeInit = 0;
 
+static inline int _toOctalIdx(char ch) __attribute__((always_inline));
+
 OctalTrieTree *ottInit() {
 
 	OctalTrieTree *ottRoot = (OctalTrieTree *) calloc(1, sizeof(OctalTrieTree));
@@ -806,6 +820,19 @@ OctalTrieTree *ottInit() {
 	_octalTrieTreeInit = 1;
 
 	return ottRoot;
+}
+
+/*
+ * Function _toOctalIdx is private to this file.
+ */
+static inline int _toOctalIdx(char ch) {
+	// Only allow octal characters, both upper and lower case.
+	if (ch > 47 && ch < 56) {
+		return ((int)ch - (int)'0');
+	} else {
+		Err("ERROR: Not a Octal character. (%c)(%d)\n", ch, ch);
+		return 0;
+	}
 }
 
 /*
@@ -831,7 +858,7 @@ OctalTrieTreeNode *ottFindEnd(OctalTrieTree *trie, char *key) {
 		}
 
 		// Jump to the next node
-		node = node->next[IDX(*p)];
+		node = node->next[_toOctalIdx(*p)];
 	}
 
 	if (node == NULL || node->inUse == 0)
@@ -863,7 +890,7 @@ static void _ottRollback(OctalTrieTree *trie, char *key) {
 
 		/* Find the next node now. We might free this node. */
 
-		next_prev_ptr = &node->next[IDX(*p)];
+		next_prev_ptr = &node->next[_toOctalIdx(*p)];
 		next_node = *next_prev_ptr;
 		++p;
 
@@ -953,17 +980,19 @@ int ottInsert(OctalTrieTree *trie, char *key, void *value, int valueLen) {
 		if (*p == '\0') {
 			if (node->data != NULL) {
 				free(node->data);
+				node->data = NULL;
 				ret = 2;
 			} else {
 				ret = 1;
 			}
 			node->data = (void *)calloc(1, valueLen + 1);
 			memcpy((char *)node->data, (char *)value, valueLen);
+			AtomicAdd(&node->inUse, 1);
 			break;
 		}
 
 		// Advance to the next node in the chain
-		rover = &node->next[IDX(*p)];
+		rover = &node->next[_toOctalIdx(*p)];
 		++p;
 	}
 
@@ -984,8 +1013,10 @@ int ottDelete(OctalTrieTree *trie, char *key) {
 	node = ottFindEnd(trie, key);
 
 	if (node != NULL) {
-		if (node->data != NULL)
+		if (node->data != NULL) {
 			free(node->data);
+			node->data = NULL;
+		}
 		if (node->useCount > 0)
 			node->useCount--;
 		if (node->useCount == 0)

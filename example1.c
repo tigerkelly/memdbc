@@ -189,8 +189,10 @@ void testDigital() {
 	memDbcWalk(memDbc, walkCallback);
 
 	// update record.
-	printf("Update record '678'\n");
-	memDbcAdd(memDbc, "678", "updated, hello world.", 21);
+	printf("Update record '123'\n");
+	memDbcAdd(memDbc, "123", "updated, hello world.", 21);
+
+	memDbcWalk(memDbc, walkCallback);
 
 	// Save all records to an ascii text file.
 	// If fileName is NULL then caller handles saving data.
@@ -305,11 +307,14 @@ void testOctal() {
 	memDbcWalk(memDbc, walkCallback);
 
 	// update record.
-	printf("Update record '0123'\n");
-	memDbcAdd(memDbc, "0678", "was updated.", 12);
+	printf("Update record '067'\n");
+	memDbcAdd(memDbc, "067", "was updated.", 12);
+
+	memDbcWalk(memDbc, walkCallback);
 
 	// Save all records to an ascii text file.
 	// If fileName is NULL then caller handles saving data.
+	printf("Save octal db\n");
 	memDbcSave(memDbc, "octal1.txt", saveCallback);
 }
 
@@ -317,6 +322,10 @@ void testOctal() {
 // The string will be freed by the memDbcSave function.
 char *saveCallback(char *key, void *data) {
 	char *s = NULL;
+
+	// printf("key=%p (%s), data=%p (%s)\n", key, key, data, (char *)data);
+	if (key == NULL || data == NULL)
+		return s;
 
 	int len = strlen(key) + strlen((char *)data) + 2;
 	if (len > 2)
@@ -331,6 +340,9 @@ char *saveCallback(char *key, void *data) {
 // The string will be freed by the memDbcSave function.
 char *walkCallback(char *key, void *data) {
 	char *s = NULL;
+
+	if (key == NULL || data == NULL)
+		return s;
 
 	int len = strlen(key) + strlen((char *)data) + 2;
 	if (len > 2)
