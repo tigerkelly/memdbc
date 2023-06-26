@@ -71,10 +71,14 @@
 // For other types it may only clear partially. If the type is not bool prefer using __atomic_store.
 #define AtomicClear(p)          __atmoic_clear(p, __ATOMIC_SEQ_CST)
 
-#define Err(txt, ...) \
+#ifndef pErr
+#define pErr(txt, ...) \
     do { fprintf(stderr, "ERROR: %s(%d): " txt, __FUNCTION__, __LINE__, ##__VA_ARGS__); } while(0)
-#define Info(txt, ...) \
+#endif
+#ifndef pInfo
+#define pInfo(txt, ...) \
     do { printf("INFO: %s(%d): " txt, __FUNCTION__, __LINE__, ##__VA_ARGS__); } while(0)
+#endif
 
 typedef enum _dbtypes_ {
 	ASCII_DB = 1,
