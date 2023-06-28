@@ -58,7 +58,7 @@ static inline int _toAsciiIdx(char ch) {
 	if (ch > 31 && ch < 127)
 		return (int)ch - ' ';
 	else {
-		Err("ERROR: Not a printable character.\n");
+		pErr("ERROR: Not a printable character.\n");
 		return 0;
 	}
 }
@@ -73,7 +73,7 @@ AsciiTrieTreeNode *attFindEnd(AsciiTrieTree *trie, char *key) {
 	char *p;
 
 	if (_asciiTrieTreeInit == 0) {
-		Err("Must call attInit() first.\n");
+		pErr("Must call attInit() first.\n");
 		return NULL;
 	}
 
@@ -158,7 +158,7 @@ int attInsert(AsciiTrieTree *trie, char *key, void *value, int valueLen) {
 	int ret = 0;
 
 	if (_asciiTrieTreeInit == 0) {
-		Err("Must call attInit() first.\n");
+		pErr("Must call attInit() first.\n");
 		return ret;
 	}
 
@@ -241,7 +241,7 @@ int attDelete(AsciiTrieTree *trie, char *key) {
 	AsciiTrieTreeNode *node;
 
 	if (_asciiTrieTreeInit == 0) {
-		Err("Must call attInit() first.\n");
+		pErr("Must call attInit() first.\n");
 		return -1;
 	}
 
@@ -267,7 +267,7 @@ void *attLookup(AsciiTrieTree *trie, char *key) {
 	AsciiTrieTreeNode *node;
 
 	if (_asciiTrieTreeInit == 0) {
-		Err("Must call attInit() first.\n");
+		pErr("Must call attInit() first.\n");
 		return NULL;
 	}
 
@@ -285,7 +285,7 @@ int attNumEntries(AsciiTrieTree *trie) {
 	// of the root node.
 
 	if (_asciiTrieTreeInit == 0) {
-		Err("Must call ttInit() first.\n");
+		pErr("Must call ttInit() first.\n");
 		return 0;
 	}
 
@@ -322,7 +322,7 @@ DigitalTrieTreeNode *dttFindEnd(DigitalTrieTree *trie, char *key) {
 	char *p;
 
 	if (_digitalTrieTreeInit == 0) {
-		Err("Must call ttInit() first.\n");
+		pErr("Must call ttInit() first.\n");
 		return NULL;
 	}
 
@@ -406,7 +406,7 @@ int dttInsert(DigitalTrieTree *trie, char *key, void *value, int valueLen) {
 	int ret = 0;
 
 	if (_digitalTrieTreeInit == 0) {
-		Err("Must call ttInit() first.\n");
+		pErr("Must call ttInit() first.\n");
 		return ret;
 	}
 
@@ -489,7 +489,7 @@ int dttDelete(DigitalTrieTree *trie, char *key) {
 	DigitalTrieTreeNode *node;
 
 	if (_digitalTrieTreeInit == 0) {
-		Err("Must call dttInit() first.\n");
+		pErr("Must call dttInit() first.\n");
 		return -1;
 	}
 
@@ -515,7 +515,7 @@ void *dttLookup(DigitalTrieTree *trie, char *key) {
 	DigitalTrieTreeNode *node;
 
 	if (_digitalTrieTreeInit == 0) {
-		Err("Must call ttInit() first.\n");
+		pErr("Must call ttInit() first.\n");
 		return NULL;
 	}
 
@@ -533,7 +533,7 @@ int dttNumEntries(DigitalTrieTree *trie) {
 	// of the root node.
 
 	if (_digitalTrieTreeInit == 0) {
-		Err("Must call ttInit() first.\n");
+		pErr("Must call ttInit() first.\n");
 		return 0;
 	}
 
@@ -572,7 +572,7 @@ static inline int _toHexIdx(char ch) {
 	else if ((int)ch > 96 && ch < 103)
 		return ((int)ch - (int)'a') + 10;
 	else {
-		Err("ERROR: Not a Hex character.\n");
+		pErr("ERROR: Not a Hex character.\n");
 		return 0;
 	}
 }
@@ -585,7 +585,7 @@ HexTrieTreeNode *httFindEnd(HexTrieTree *trie, char *key) {
 	char *p;
 
 	if (_hexTrieTreeInit == 0) {
-		Err("Must call httInit() first.\n");
+		pErr("Must call httInit() first.\n");
 		return NULL;
 	}
 
@@ -669,7 +669,7 @@ int httInsert(HexTrieTree *trie, char *key, void *value, int valueLen) {
 	int ret = 0;
 
 	if (_hexTrieTreeInit == 0) {
-		Err("Must call httInit() first.\n");
+		pErr("Must call httInit() first.\n");
 		return ret;
 	}
 
@@ -751,7 +751,7 @@ int httDelete(HexTrieTree *trie, char *key) {
 	HexTrieTreeNode *node;
 
 	if (_hexTrieTreeInit == 0) {
-		Err("Must call httInit() first.\n");
+		pErr("Must call httInit() first.\n");
 		return -1;
 	}
 
@@ -777,7 +777,7 @@ void *httLookup(HexTrieTree *trie, char *key) {
 	HexTrieTreeNode *node;
 
 	if (_hexTrieTreeInit == 0) {
-		Err("Must call httInit() first.\n");
+		pErr("Must call httInit() first.\n");
 		return NULL;
 	}
 
@@ -795,7 +795,7 @@ int httNumEntries(HexTrieTree *trie) {
 	// of the root node.
 
 	if (_hexTrieTreeInit == 0) {
-		Err("Must call ttInit() first.\n");
+		pErr("Must call ttInit() first.\n");
 		return 0;
 	}
 
@@ -830,7 +830,7 @@ static inline int _toOctalIdx(char ch) {
 	if (ch > 47 && ch < 56) {
 		return ((int)ch - (int)'0');
 	} else {
-		Err("ERROR: Not a Octal character. (%c)(%d)\n", ch, ch);
+		pErr("ERROR: Not a Octal character. (%c)(%d)\n", ch, ch);
 		return 0;
 	}
 }
@@ -843,7 +843,7 @@ OctalTrieTreeNode *ottFindEnd(OctalTrieTree *trie, char *key) {
 	char *p = NULL;
 
 	if (_octalTrieTreeInit == 0) {
-		Err("Must call ottInit() first.\n");
+		pErr("Must call ottInit() first.\n");
 		return NULL;
 	}
 
@@ -926,7 +926,7 @@ int ottInsert(OctalTrieTree *trie, char *key, void *value, int valueLen) {
 	int ret = 0;
 
 	if (_octalTrieTreeInit == 0) {
-		Err("Must call ottInit() first.\n");
+		pErr("Must call ottInit() first.\n");
 		return ret;
 	}
 
@@ -1006,7 +1006,7 @@ int ottDelete(OctalTrieTree *trie, char *key) {
 	OctalTrieTreeNode *node;
 
 	if (_octalTrieTreeInit == 0) {
-		Err("Must call ottInit() first.\n");
+		pErr("Must call ottInit() first.\n");
 		return -1;
 	}
 
@@ -1032,7 +1032,7 @@ void *ottLookup(OctalTrieTree *trie, char *key) {
 	OctalTrieTreeNode *node;
 
 	if (_octalTrieTreeInit == 0) {
-		Err("Must call ottInit() first.\n");
+		pErr("Must call ottInit() first.\n");
 		return NULL;
 	}
 
@@ -1050,7 +1050,7 @@ int ottNumEntries(OctalTrieTree *trie) {
 	// of the root node.
 
 	if (_octalTrieTreeInit == 0) {
-		Err("Must call ttInit() first.\n");
+		pErr("Must call ttInit() first.\n");
 		return 0;
 	}
 
